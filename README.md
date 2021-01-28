@@ -2,7 +2,16 @@
 
 Learn Istio by example and a bit of Golang!
 
-<!-- TOC -->autoauto- [golearnistio](#golearnistio)auto        - [What is it all about?](#what-is-it-all-about)auto        - [How this works?](#how-this-works)auto        - [How long will it take?](#how-long-will-it-take)auto        - [How to contact me?](#how-to-contact-me)auto        - [Chapter 00: High - level plan](#chapter-00-high---level-plan)autoauto<!-- /TOC -->
+<!-- TOC -->
+
+- [golearnistio](#golearnistio)
+        - [What is it all about?](#what-is-it-all-about)
+        - [How this works?](#how-this-works)
+        - [How long will it take?](#how-long-will-it-take)
+        - [How to contact me?](#how-to-contact-me)
+        - [Chapter 00: High - level plan](#chapter-00-high---level-plan)
+
+<!-- /TOC -->
 
 ### What is it all about?
 
