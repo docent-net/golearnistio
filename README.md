@@ -2,6 +2,8 @@
 
 Learn Istio by example and a bit of Golang!
 
+<!-- TOC -->autoauto- [golearnistio](#golearnistio)auto        - [What is it all about?](#what-is-it-all-about)auto        - [How this works?](#how-this-works)auto        - [How long will it take?](#how-long-will-it-take)auto        - [How to contact me?](#how-to-contact-me)auto        - [Chapter 00: High - level plan](#chapter-00-high---level-plan)autoauto<!-- /TOC -->
+
 ### What is it all about?
 
 This is about you learning Istio. If you want of course. And story behind is.. I need an Istio crash course. A practical one, not theoretical.  Usually in that kind of situations I basically try installing, configuring and working with a service. However, in case of Istio you need a whole application in order to test Istio features.
