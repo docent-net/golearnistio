@@ -5,11 +5,11 @@ Learn Istio by example and a bit of Golang!
 <!-- TOC -->
 
 - [golearnistio](#golearnistio)
-        - [What is it all about?](#what-is-it-all-about)
-        - [How this works?](#how-this-works)
-        - [How long will it take?](#how-long-will-it-take)
-        - [How to contact me?](#how-to-contact-me)
-        - [Chapter 00: High - level plan](#chapter-00-high---level-plan)
+  - [What is it all about?](#what-is-it-all-about)
+  - [How this works?](#how-this-works)
+  - [How long will it take?](#how-long-will-it-take)
+  - [How to contact me?](#how-to-contact-me)
+  - [Chapter 00: High - level plan](#chapter-00-high---level-plan)
 
 <!-- /TOC -->
 
