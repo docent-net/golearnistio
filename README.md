@@ -14,9 +14,9 @@ So, here we are :)
 
 I'll post updates here (simply turn on watching custom events / pull requests for this repository) or [follow me on Twitter](https://twitter.com/docent_net) or [follow hastag #golearnistio](https://twitter.com/hashtag/golearnistio?src=hashtag_click)
 
-Each "chapter" will specify a part that is to be READ by you (and ofc understand / process).
+Each "chapter" will specify a part that is to be **READ** by you (and ofc understand / process).
 
-Also there will be a HOMEWORK part.
+Also there will be a **HOMEWORK** part.
 
 ### How long will it take?
 
@@ -47,3 +47,16 @@ So I thought about it thoroughly and here's a plan, that we will follow (if you 
 1. Istio: mTLS
 1. Istio: egress
 1. Running application performance tests
+1. Istio: multicluster setup
+
+**READ**:
+
+- [Istio architecture](https://istio.io/latest/docs/ops/deployment/architecture/)
+- [Istio deployment models](https://istio.io/latest/docs/ops/deployment/deployment-models/)
+- [Helm package manager for k8s](https://helm.sh/docs/topics/charts/)
+- [Helmfile for managing Helm charts](https://github.com/roboll/helmfile)
+
+**HOMEWORK**:
+
+1. Do you think above high-level plan is fine? Maybe you have any suggestions? Post it on [GH discussions](https://github.com/docent-net/golearnistio/discussions). Otherwise, you can always just say "hello" :)
+1. You will need a K8S cluster (in last chapter even 2 clusters) for this workshop. It can be whatever cluster you have, but keep in mind, that K3S may not be enough (e.g. some problems w/installing Kiali on K3S: https://discuss.istio.io/t/jaeger-url-not-valid-in-kiali-configuration/5307/10). As for resources - we will use minimum number of resources. A couple of tiny services and that's all. We won't need any persistent storage. We'll redeploy applications quite often using Helmfile.
