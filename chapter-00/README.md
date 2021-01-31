@@ -36,4 +36,4 @@ So I thought about it thoroughly and here's a plan, that we will follow (if you 
 
 **Recording**:
 
-[![YouTube stream](http://i.imgur.com/Ot5DWAW.png)](https://www.youtube.com/embed/GgF6Ov5Pg80)
+[![YouTube stream](https://raw.githubusercontent.com/docent-net/golearnistio/main/chapter-00/yt-screenshot.png)](https://www.youtube.com/embed/GgF6Ov5Pg80)
