@@ -36,4 +36,4 @@ So I thought about it thoroughly and here's a plan, that we will follow (if you 
 
 **Recording**:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/GgF6Ov5Pg80" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![YouTube stream](http://i.imgur.com/Ot5DWAW.png)](https://www.youtube.com/embed/GgF6Ov5Pg80)
