@@ -5,13 +5,37 @@ Learn Istio by example and a bit of Golang!
 <!-- TOC -->
 
 - [golearnistio](#golearnistio)
-  - [What is it all about?](#what-is-it-all-about)
-  - [How this works?](#how-this-works)
-  - [How long will it take?](#how-long-will-it-take)
-  - [How to contact me?](#how-to-contact-me)
-  - [Chapter 00: High - level plan](#chapter-00-high---level-plan)
+        - [Chapters index](#chapters-index)
+        - [What is it all about?](#what-is-it-all-about)
+        - [How this works?](#how-this-works)
+        - [A youtube stream](#a-youtube-stream)
+        - [How long will it take?](#how-long-will-it-take)
+        - [How to contact me?](#how-to-contact-me)
 
 <!-- /TOC -->
+
+### Chapters index
+
+- [Chapter 00: High level plan](chapter-00/)
+- Chapter 01: Application architecture
+- Chapter 02: Implementing + installing application
+- Chapter 03: Installing application w/Helmfile
+- Chapter 04: Running application performance tests
+- Chapter 05: Installing Istio
+- Chapter 06: Istio: tracing
+- Chapter 07: Istio: observability
+- Chapter 08: Istio: gateway and SSL w/cert-manager
+- Chapter 09: Istio: routing - basic traffic splitting
+- Chapter 10: Istio: routing - advanced traffic splitting
+- Chapter 11: Istio: routing - sticky sessions
+- Chapter 12: Istio: routing - mirroring (dark traffic and live debugging)
+- Chapter 13: Istio: fault injection
+- Chapter 14: Istio: circuit breakers
+- Chapter 15: Istio: JWT
+- Chapter 16: Istio: mTLS
+- Chapter 17: Istio: egress
+- Chapter 18: Running application performance tests
+- Chapter 19: Istio: multicluster setup
 
 ### What is it all about?
 
@@ -28,6 +52,12 @@ I'll post updates here (simply turn on watching custom events / pull requests fo
 Each "chapter" will specify a part that is to be **READ** by you (and ofc understand / process).
 
 Also there will be a **HOMEWORK** part.
+
+### A youtube stream
+
+Beside notes, that are 100% enought to run this workshop yourself in your
+lab, I'm running a youtube stream for each chapter. I'm basically recording
+my work. The stream is available here: [golearnistio stream](https://www.youtube.com/watch?v=GgF6Ov5Pg80&list=PLe_xxswxhVz_XSGfhJq_oYtUgOgWoQu6Y&ab_channel=MaciejLasyk)
 
 ### How long will it take?
 
