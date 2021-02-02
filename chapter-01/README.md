@@ -1,5 +1,5 @@
 
-# Chapter 01: Appplication architecture
+# Chapter 01: Application architecture
 
 In this chapter we will focus on couple of activities:
 
