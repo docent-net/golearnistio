@@ -17,7 +17,7 @@ Learn Istio by example and a bit of Golang!
 ### Chapters index
 
 - [Chapter 00: High level plan](chapter-00/)
-- Chapter 01: Application architecture
+- [Chapter 01: Application architecture](chapter-01/)
 - Chapter 02: Implementing + installing application
 - Chapter 03: Installing application w/Helmfile
 - Chapter 04: Running application performance tests
