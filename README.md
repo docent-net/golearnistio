@@ -18,7 +18,7 @@ Learn Istio by example and a bit of Golang!
 
 - [Chapter 00: High level plan](chapter-00/)
 - [Chapter 01: Application architecture](chapter-01/)
-- Chapter 02: Implementing application
+- [Chapter 02: Implementing application](chapter-02/)
 - Chapter 03: Installing application w/Helmfile
 - Chapter 04: Running application performance tests
 - Chapter 05: Installing Istio + istioctl
