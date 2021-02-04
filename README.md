@@ -5,12 +5,12 @@ Learn Istio by example and a bit of Golang!
 <!-- TOC -->
 
 - [golearnistio](#golearnistio)
-  - [Chapters index](#chapters-index)
-  - [What is it all about?](#what-is-it-all-about)
-  - [How this works?](#how-this-works)
-  - [A youtube stream](#a-youtube-stream)
-  - [How long will it take?](#how-long-will-it-take)
-  - [Contact](#contact)
+        - [Chapters index](#chapters-index)
+        - [What is it all about?](#what-is-it-all-about)
+        - [How this works?](#how-this-works)
+        - [A youtube stream](#a-youtube-stream)
+        - [How long will it take?](#how-long-will-it-take)
+        - [Contact](#contact)
 
 <!-- /TOC -->
 
@@ -18,10 +18,10 @@ Learn Istio by example and a bit of Golang!
 
 - [Chapter 00: High level plan](chapter-00/)
 - [Chapter 01: Application architecture](chapter-01/)
-- Chapter 02: Implementing + installing application
+- Chapter 02: Implementing application
 - Chapter 03: Installing application w/Helmfile
 - Chapter 04: Running application performance tests
-- Chapter 05: Installing Istio
+- Chapter 05: Installing Istio + istioctl
 - Chapter 06: Istio: tracing
 - Chapter 07: Istio: observability
 - Chapter 08: Istio: gateway and SSL w/cert-manager
