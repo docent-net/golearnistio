@@ -5,12 +5,12 @@ Learn Istio by example and a bit of Golang!
 <!-- TOC -->
 
 - [golearnistio](#golearnistio)
-        - [Chapters index](#chapters-index)
-        - [What is it all about?](#what-is-it-all-about)
-        - [How this works?](#how-this-works)
-        - [A youtube stream](#a-youtube-stream)
-        - [How long will it take?](#how-long-will-it-take)
-        - [Contact](#contact)
+  - [Chapters index](#chapters-index)
+  - [What is it all about?](#what-is-it-all-about)
+  - [How this works?](#how-this-works)
+  - [A youtube stream](#a-youtube-stream)
+  - [How long will it take?](#how-long-will-it-take)
+  - [Contact](#contact)
 
 <!-- /TOC -->
 
