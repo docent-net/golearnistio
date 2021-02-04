@@ -1,12 +1,10 @@
 
 # Chapter 01: Application architecture
 
-In this chapter we will focus on couple of activities:
+In this chapter we will focus on following activities:
 
 1. Create application components diagram
 1. Create API specifications for each backend service
-1. Implement applications one-by-one
-1. Containerize applications
 
 ### Create application components diagram
 
@@ -53,14 +51,6 @@ be rather bogus-endpoints, that does almost nothing (almost, because it will
 e.g. try to connect to database or queue and maybe even fetch some data - we
 will see).
 
-### Implement applications one-by-one
-
-TBD
-
-### Containerize applications
-
-TBD
-
 **READ**:
 
 nothing for now
@@ -72,4 +62,4 @@ nothing for now
 
 **Recording**:
 
-TBD, probably will record this in couple of shorter sessions
+TBD

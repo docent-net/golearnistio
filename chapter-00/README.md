@@ -3,24 +3,26 @@
 
 So I thought about it thoroughly and here's a plan, that we will follow (if you have some suggestions / ideas related to this plan - post it on [GH discussions](https://github.com/docent-net/golearnistio/discussions):
 
-1. Appplication architecture
-1. Installing application w/Helmfile
-1. Running application performance tests
-1. Installing Istio
-1. Istio: tracing
-1. Istio: observability
-1. Istio: gateway and SSL w/cert-manager
-1. Istio: routing - basic traffic splitting
-1. Istio: routing - advanced traffic splitting
-1. Istio: routing - sticky sessions
-1. Istio: routing - mirroring (dark traffic and live debugging)
-1. Istio: fault injection
-1. Istio: circuit breakers
-1. Istio: JWT
-1. Istio: mTLS
-1. Istio: egress
-1. Running application performance tests
-1. Istio: multicluster setup
+- High level plan
+- Application architecture
+- Implementing application
+- Installing application w/Helmfile
+- Running application performance tests
+- Installing Istio + istioctl
+- Istio: tracing
+- Istio: observability
+- Istio: gateway and SSL w/cert-manager
+- Istio: routing - basic traffic splitting
+- Istio: routing - advanced traffic splitting
+- Istio: routing - sticky sessions
+- Istio: routing - mirroring (dark traffic and live debugging)
+- Istio: fault injection
+- Istio: circuit breakers
+- Istio: JWT
+- Istio: mTLS
+- Istio: egress
+- Running application performance tests
+- Istio: multicluster setup
 
 **READ**:
 
