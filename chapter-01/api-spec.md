@@ -32,6 +32,7 @@ All endpoints are very simple and returns strings.
 - /generate-bs [GET]:
     - properties:
         - bs-type [int]
+            - 1: img_name beautifier
     - response:
         - 200, <content-value>
         - 404, 'no-content-for-this-bs-type'
@@ -42,34 +43,34 @@ All endpoints are very simple and returns strings.
 
 - /status [GET]:
     - response:
-        - 200, 'OK'
+        - 200, {'status': 'OK'}
 - /test-services-conns [GET]:
     - response:
-        - 200, 'OK'
-        - 500, "connfail: list,of,not,responding,services"
+        - 200, {'status': 'OK'}
+        - 500, {'connfail': 'list,of,not,responding,services'}
 - /save-image [POST]:
     - properties:
         - image-name [string]
         - image-size [int]
     - response:
-        - 200, 'image-saved'
-        - 570, 'image-not-saved'
-        - 550, 'cannot connect to databases'
-        - 551, 'cannot connect to backend services'
+        - 200, {'status': 'image-saved'}
+        - 570, {'status': 'image-not-saved'}
+        - 550, {'status': 'cannot connect to databases'}
+        - 551, {'status': 'cannot connect to backend services'}
 - /replace-image [PUT]:
     - properties:
         - image-name [string]
         - image-size [int]
         - image-id [string]
     - response:
-        - 200, 'image-replaced'
-        - 570, 'image-not-replaced'
+        - 200, {'status': 'image-replaced'}
+        - 570, {'status': 'image-not-replaced'}
 - /delete-image [DELETE]:
     - properties:
         - image-id [string]
     - response:
-        - 200, 'image-deleted'
-        - 570, 'image-not-deleted'
+        - 200, {'status': 'image-deleted'}
+        - 570, {'status': 'image-not-deleted'}
 
 ### mailing-service
 
