@@ -70,6 +70,7 @@ All endpoints are very simple and returns strings.
         - image-id [string]
     - response:
         - 200, {'status': 'image-deleted'}
+        - 550, {'status': 'cannot connect to databases'}
         - 570, {'status': 'image-not-deleted'}
 
 ### mailing-service

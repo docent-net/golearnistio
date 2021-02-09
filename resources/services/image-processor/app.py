@@ -31,6 +31,25 @@ def status_handler():
 
     return {'status': 'OK'}, status.HTTP_200_OK
 
+@app.route("/delete-image", methods=['DELETE'])
+def delete_image_handler():
+    """
+    Replace image dummy endpoint
+    """
+
+    img_id = request.args.get('image-id', '', type=str)
+
+    if not img_id:
+        return {'status': 'image-not-deleted'}, 570
+
+    # TODO: DB connections here - later, when DB work
+    #   - 550, 'cannot connect to databases'
+
+    # for now let's just pretend we do something
+    sleep(0.15)
+
+    return {'status': 'image-deleted'}, status.HTTP_200_OK
+
 @app.route("/replace-image", methods=['PUT'])
 def replace_image_handler():
     """
