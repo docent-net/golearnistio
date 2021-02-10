@@ -13,6 +13,10 @@
 # This is a shit code. Don't learn anything from it. It's supposed to work
 # and be very easy to understand. Nothing more, nothing less.
 #
+# golearnistio: image-processor
+#
+#   A dummy service pretending to process uploaded images)
+#
 ##########################################################################
 from flask import request, url_for
 from flask_api import FlaskAPI, status, exceptions
@@ -63,9 +67,12 @@ def replace_image_handler():
     if not img_name or not img_size or not img_id:
         return {'status': 'image-not-replaced'}, 570
 
-    # TODO: DB connections here - later, when DB work
-    #   - 550, 'cannot connect to databases'
-    #   - 551, 'cannot connect to backend services'
+    better_img_name = generate_better_img_name(img_name)
+    if not better_img_name:
+        return {'status': 'cannot connect to backend services'}, 551
+
+    # TODO: queue connections here - later, when queue work
+    #   - 550, 'cannot connect to queue'
 
     # for now let's just pretend we do something
     sleep(0.15)
@@ -89,8 +96,8 @@ def save_image_handler():
         return {'status': 'cannot connect to backend services'}, 551
 
     #   - 551, 'cannot connect to backend services'
-    # TODO: DB connections here - later, when DB work
-    #   - 550, 'cannot connect to databases'
+    # TODO: queue connections here - later, when queue work
+    #   - 550, 'cannot connect to queue'
     # async_save_image_to_storage()
     # enqueue_image_processing()
 

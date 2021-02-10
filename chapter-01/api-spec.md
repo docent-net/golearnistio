@@ -6,11 +6,11 @@ All endpoints are very simple and returns strings.
 
 - /status [GET]:
     - response:
-        - 200, 'OK'
+        - 200, {'status': 'OK'}
 - /test-services-conns [GET]:
     - response:
-        - 200, 'OK'
-        - 500, "connfail: list,of,not,responding,services"
+        - 200, {'status': 'OK'}
+        - 500, {'connfail': 'list,of,not,responding,services'}
 - /authorize [POST]:
     - properties:
         - username [string]
@@ -24,11 +24,11 @@ All endpoints are very simple and returns strings.
 
 - /status [GET]:
     - response:
-        - 200, 'OK'
+        - 200, {'status': 'OK'}
 - /test-services-conns [GET]:
     - response:
-        - 200, 'OK'
-        - 500, "connfail: list,of,not,responding,services"
+        - 200, {'status': 'OK'}
+        - 500, {'connfail': 'list,of,not,responding,services'}
 - /generate-bs [GET]:
     - properties:
         - bs-type [int]
@@ -55,7 +55,7 @@ All endpoints are very simple and returns strings.
     - response:
         - 200, {'status': 'image-saved'}
         - 570, {'status': 'image-not-saved'}
-        - 550, {'status': 'cannot connect to databases'}
+        - 550, {'status': 'cannot connect to queue'}
         - 551, {'status': 'cannot connect to backend services'}
 - /replace-image [PUT]:
     - properties:
@@ -70,23 +70,24 @@ All endpoints are very simple and returns strings.
         - image-id [string]
     - response:
         - 200, {'status': 'image-deleted'}
-        - 550, {'status': 'cannot connect to databases'}
+        - 550, {'status': 'cannot connect to queue'}
         - 570, {'status': 'image-not-deleted'}
 
 ### mailing-service
 
 - /status [GET]:
     - response:
-        - 200, 'OK'
+        - 200, {'status': 'OK'}
 - /test-services-conns [GET]:
     - response:
-        - 200, 'OK'
-        - 500, "connfail: list,of,not,responding,services"
+        - 200, {'status': 'OK'}
+        - 500, {'connfail': 'list,of,not,responding,services'}- /send-message [POST]:
 - /send-message [POST]:
     - properties:
-        - author [string]
-        - body [string]
-        - addressee [string]
+        - msg-author [string]
+        - msg-body [string]
+        - msg-addressee [string]
     - response:
-        - 200, 'message-queued'
-        - 570, 'could-not-enqueue-message'
+        - 200, {'status': 'message-queued'}
+        - 570, {'status': 'incomplete-message-properties'}
+        - 571, {'status': 'could-not-enqueue-message'}
