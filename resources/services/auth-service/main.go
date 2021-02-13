@@ -25,7 +25,21 @@ func main() {
 	http.HandleFunc("/", status_handler)
 	http.HandleFunc("/status", status_handler)
 	http.HandleFunc("/test-services-conns", test_services_conns_handler)
+	http.HandleFunc("/authorize", authorize_handler)
 	log.Fatal(http.ListenAndServe("0.0.0.0:8002", nil))
+}
+
+func authorize_handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	if r.Method == "POST" {
+		// TODO: return authorized / unauthorized / DB conn err
+		w.WriteHeader(http.StatusOK)
+
+		status := StatusStruct{Status: "OK"}
+		json.NewEncoder(w).Encode(status)
+	} else {
+		error_404_handler(w)
+	}
 }
 
 func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
