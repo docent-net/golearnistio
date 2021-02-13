@@ -162,7 +162,7 @@ def verify_service_connectivity(svc_url):
     except Exception:
         pass
 
-    if req.json()['status'] == 'OK':
+    if req.status_code == 200 and req.json()['status'] == 'OK':
         return True
 
     return False

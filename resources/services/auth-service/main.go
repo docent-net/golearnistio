@@ -6,7 +6,12 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
+
+type HttpResp struct {
+	Status string
+}
 
 type StatusStruct struct {
 	Status string `json:"status"`
@@ -30,7 +35,6 @@ func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		for _, envvar := range os.Environ() {
 			_envvar := strings.SplitN(envvar, "=", 2)
-			println(_envvar[0])
 			if strings.HasPrefix(_envvar[0], "ISTIO_SVC_") {
 				if !verify_service_connectivity(_envvar[1]) {
 					failed_services = append(failed_services, _envvar[0])
@@ -46,7 +50,7 @@ func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(connstatus)
 		} else {
 			w.WriteHeader(http.StatusOK)
-			connstatus := StatusStruct{Status: "ok"}
+			connstatus := StatusStruct{Status: "OK"}
 			json.NewEncoder(w).Encode(connstatus)
 		}
 	} else {
@@ -55,9 +59,28 @@ func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func verify_service_connectivity(svc_url string) bool {
-	_, err := http.Get(svc_url)
+	client := http.Client{
+		Timeout: 1 * time.Second,
+	}
+
+	req, err := client.Get(svc_url)
 	if err != nil {
-		return true
+		return false
+	}
+
+	if req.StatusCode == http.StatusOK {
+		defer req.Body.Close()
+
+		var req_status = new(HttpResp)
+		err := json.NewDecoder(req.Body).Decode(req_status)
+		if err != nil {
+			return false
+		}
+
+		if strings.ToUpper(req_status.Status) == "OK" {
+			return true
+		}
+		return false
 	}
 
 	return false
@@ -67,9 +90,8 @@ func status_handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	if r.Method == "GET" {
 		w.WriteHeader(http.StatusOK)
-		// w.Write([]byte(`{"message": "hello world"}`))
 
-		status := StatusStruct{Status: "ok"}
+		status := StatusStruct{Status: "OK"}
 		json.NewEncoder(w).Encode(status)
 	} else {
 		error_404_handler(w)
