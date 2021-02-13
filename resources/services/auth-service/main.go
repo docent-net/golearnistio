@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -20,24 +19,50 @@ type ConnStatusFailStruct struct {
 func main() {
 	http.HandleFunc("/", status_handler)
 	http.HandleFunc("/status", status_handler)
-	http.HandleFunc("/test-services-conns", status_handler)
-	log.Fatal(http.ListenAndServe("0.0.0.0:8000", nil))
+	http.HandleFunc("/test-services-conns", test_services_conns_handler)
+	log.Fatal(http.ListenAndServe("0.0.0.0:8002", nil))
 }
 
 func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	if r.Method == "POST" {
+	var failed_services []string
+
+	if r.Method == "GET" {
 		for _, envvar := range os.Environ() {
-			pair := strings.SplitN(e, "=", 2)
-			fmt.Printf("%s: %s\n", pair[0], pair[1])
+			_envvar := strings.SplitN(envvar, "=", 2)
+			println(_envvar[0])
+			if strings.HasPrefix(_envvar[0], "ISTIO_SVC_") {
+				if !verify_service_connectivity(_envvar[1]) {
+					failed_services = append(failed_services, _envvar[0])
+				}
+			}
 		}
-		w.WriteHeader(http.StatusOK)
-		connstatus := ConnStatusFailStruct{ConnStatusFail: "ok"}
-		json.NewEncoder(w).Encode(connstatus)
+
+		if len(failed_services) > 0 {
+			w.WriteHeader(500)
+			connstatus := ConnStatusFailStruct{
+				ConnStatusFail: strings.Join(failed_services, ","),
+			}
+			json.NewEncoder(w).Encode(connstatus)
+		} else {
+			w.WriteHeader(http.StatusOK)
+			connstatus := StatusStruct{Status: "ok"}
+			json.NewEncoder(w).Encode(connstatus)
+		}
 	} else {
 		error_404_handler(w)
 	}
 }
+
+func verify_service_connectivity(svc_url string) bool {
+	_, err := http.Get(svc_url)
+	if err != nil {
+		return true
+	}
+
+	return false
+}
+
 func status_handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	if r.Method == "GET" {

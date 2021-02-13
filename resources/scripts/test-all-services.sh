@@ -29,6 +29,7 @@ function test_endpoint () {
     HTTP_METHOD=$2
     SCRIPT_PATH=$3
     FORM_DATA=$4
+    echo "-> [$HTTP_METHOD] $HTTP_URL/$SCRIPT_PATH"
 
     TEST=$($CURL_CMD -X $HTTP_METHOD $FORM_DATA \
         $HTTP_URL/$SCRIPT_PATH)
@@ -42,6 +43,7 @@ function test_endpoint () {
 # image-processor
 ###################################################
 
+echo -e "\n\nTesting ${SVCS_URLS[image_processor]}\n"
 test_endpoint ${SVCS_URLS[image_processor]} "GET" "status"
 test_endpoint ${SVCS_URLS[image_processor]} "GET" "test-services-conns"
 test_endpoint ${SVCS_URLS[image_processor]} "DELETE" \
@@ -59,6 +61,7 @@ test_endpoint ${SVCS_URLS[image_processor]} "PUT" "replace-image" \
 # mailing-service
 ###################################################
 
+echo -e "\n\nTesting ${SVCS_URLS[mailing_service]}\n"
 test_endpoint ${SVCS_URLS[mailing_service]} "GET" "status"
 test_endpoint ${SVCS_URLS[mailing_service]} "GET" "test-services-conns"
 test_endpoint ${SVCS_URLS[mailing_service]} "POST" "send-message" \
@@ -70,6 +73,15 @@ test_endpoint ${SVCS_URLS[mailing_service]} "POST" "send-message" \
 # content-generator
 ###################################################
 
+echo -e "\n\nTesting ${SVCS_URLS[content_generator]}\n"
+
 ###################################################
 # auth-service
 ###################################################
+
+echo -e "\n\nTesting ${SVCS_URLS[auth_service]}\n"
+test_endpoint ${SVCS_URLS[auth_service]} "GET" "status"
+test_endpoint ${SVCS_URLS[auth_service]} "GET" "test-services-conns"
+test_endpoint ${SVCS_URLS[image_processor]} "POST" "authorize" \
+    '-H "Content-Type: application/x-www-form-urlencoded" \
+    -d username=test_user&password=complexpassword'

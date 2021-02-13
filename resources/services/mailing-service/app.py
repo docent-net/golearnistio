@@ -67,7 +67,7 @@ def test_services_conns_handler():
     failed_services = []
 
     for envvar_name, envvar_value in os.environ.items():
-        if envvar_name.startswith('TEST_SERVICE_'):
+        if envvar_name.startswith('ISTIO_SVC_'):
             if not verify_service_connectivity(envvar_value):
                 failed_services.append(envvar_name)
 
@@ -82,18 +82,18 @@ def verify_service_connectivity(svc_url):
     works correctly
     """
 
-    service_is_working = True
-
     try:
         req = requests.request('GET', svc_url,timeout=1)
     except (requests.exceptions.Timeout,
             requests.exceptions.ConnectionError) as e:
-        service_is_working = False
+        return False
     except Exception:
-        service_is_working = False
         pass
 
-    return service_is_working
+    if req.json()['status'] == 'OK':
+        return True
+
+    return False
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8004, debug=True)
