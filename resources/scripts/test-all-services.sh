@@ -82,6 +82,6 @@ echo -e "\n\nTesting ${SVCS_URLS[content_generator]}\n"
 echo -e "\n\nTesting ${SVCS_URLS[auth_service]}\n"
 test_endpoint ${SVCS_URLS[auth_service]} "GET" "status"
 test_endpoint ${SVCS_URLS[auth_service]} "GET" "test-services-conns"
-test_endpoint ${SVCS_URLS[image_processor]} "POST" "authorize" \
+test_endpoint ${SVCS_URLS[auth_service]} "POST" "authorize" \
     '-H "Content-Type: application/x-www-form-urlencoded" \
     -d username=test_user&password=complexpassword'

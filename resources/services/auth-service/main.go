@@ -32,14 +32,35 @@ func main() {
 func authorize_handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	if r.Method == "POST" {
-		// TODO: return authorized / unauthorized / DB conn err
-		w.WriteHeader(http.StatusOK)
+		if err := r.ParseForm(); err != nil {
+			error_403_handler(w)
+		}
 
-		status := StatusStruct{Status: "OK"}
-		json.NewEncoder(w).Encode(status)
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+
+		if username == "" || password == "" {
+			error_403_handler(w)
+		} else {
+			if validate_user_credentials(username, password) {
+				w.WriteHeader(http.StatusOK)
+
+				status := StatusStruct{Status: "OK"}
+				json.NewEncoder(w).Encode(status)
+			} else {
+				error_403_handler(w)
+			}
+		}
 	} else {
 		error_404_handler(w)
 	}
+}
+
+func validate_user_credentials(username string, password string) bool {
+	// todo: when DB is ready, add real verification of credentials
+	// for now let's just pretend we do something
+	time.Sleep(150 * time.Millisecond)
+	return true
 }
 
 func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
@@ -55,6 +76,8 @@ func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
+
+		// TODO: add verification of DB + cache connections
 
 		if len(failed_services) > 0 {
 			w.WriteHeader(500)
@@ -115,4 +138,9 @@ func status_handler(w http.ResponseWriter, r *http.Request) {
 func error_404_handler(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte(`{"status": "404 not found"}`))
+}
+
+func error_403_handler(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusUnauthorized)
+	w.Write([]byte(`{"status": "unauthorized"}`))
 }
