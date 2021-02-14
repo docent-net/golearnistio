@@ -33,10 +33,10 @@ All endpoints are very simple and returns strings.
         - bs-type [int]
             - 1: img_name beautifier
     - response:
-        - 200, <content-value>
-        - 404, 'no-content-for-this-bs-type'
-        - 550, 'cannot connect to databases'
-        - 551, 'cannot connect to backend services'
+        - 200, {'content': '<some content>'}
+        - 404, {'status': 'no-content-for-this-bs-type'}
+        - 550, {'status': 'cannot connect to databases'}
+        - 551, {'status': 'cannot connect to backend services'}
 
 ### image-processor
 

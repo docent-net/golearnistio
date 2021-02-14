@@ -74,6 +74,9 @@ test_endpoint ${SVCS_URLS[mailing_service]} "POST" "send-message" \
 ###################################################
 
 echo -e "\n\nTesting ${SVCS_URLS[content_generator]}\n"
+test_endpoint ${SVCS_URLS[content_generator]} "GET" "status"
+test_endpoint ${SVCS_URLS[content_generator]} "GET" "test-services-conns"
+test_endpoint ${SVCS_URLS[content_generator]} "GET" "generate-bs?bs-type=1"
 
 ###################################################
 # auth-service
