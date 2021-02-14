@@ -16,9 +16,8 @@ All endpoints are very simple and returns strings.
         - username [string]
         - password [string]
     - response:
-        - 200, 'authorized'
-        - 403, 'unauthorized'
-        - 550, 'cannot connect to databases'
+        - 200, {'status': 'authorized'}
+        - 403, {'status': 'unauthorized'}
 
 ### content-generator
 

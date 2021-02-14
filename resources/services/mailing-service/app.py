@@ -66,6 +66,7 @@ def test_services_conns_handler():
 
     failed_services = []
 
+    # todo: add verification of connection with queue
     for envvar_name, envvar_value in os.environ.items():
         if envvar_name.startswith('ISTIO_SVC_'):
             if not verify_service_connectivity(envvar_value):
