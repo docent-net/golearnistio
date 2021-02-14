@@ -1,3 +1,23 @@
+/*########################################################################
+#
+#     (   )
+#  (   ) (
+#   ) _   )
+#    ( \_
+#  _(_\ \)__
+# (____\___))
+#
+# BIG FAT WARNING:
+#
+# This is a shit code. Don't learn anything from it. It's supposed to work
+# and be very easy to understand. Nothing more, nothing less.
+#
+# golearnistio: auth-service
+#
+#   A dummy service pretending to process user authentication
+#
+########################################################################*/
+
 package main
 
 import (

@@ -118,7 +118,7 @@ def generate_better_img_name(img_name):
     try:
         req = requests.request(
             'GET',
-            f'{CONTENT_GENERATOR_URL}/bs_type=1',
+            f'{CONTENT_GENERATOR_URL}/generate-bs?bs-type=1',
             timeout=1
             )
     except (requests.exceptions.Timeout,
