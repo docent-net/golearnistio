@@ -54,23 +54,22 @@ func main() {
 func bs_generator_handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	if r.Method == "GET" {
-		bs_type := r.URL.Query().Get("bs-type")
-		if bs_type == "" {
-			error_404_handler(w, "no-content-for-this-bs-type")
-		} else {
-			bs_content := generate_bs_content(bs_type)
+		switch bs_type := r.URL.Query().Get("bs-type"); bs_type {
+		case "1":
+			bs_content := generate_bs_content_1()
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte(
 				fmt.Sprintf("{\"content\": \"%s\"}", bs_content),
 			))
+		default:
+			error_404_handler(w, "no-content-for-this-bs-type")
 		}
-
 	} else {
 		error_404_handler(w)
 	}
 }
 
-func generate_bs_content(bs_type string) string {
+func generate_bs_content_1() string {
 	// TODO: connecting to DBs, cache, queue
 	// for now let's just pretend we do something
 	time.Sleep(150 * time.Millisecond)

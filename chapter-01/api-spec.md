@@ -35,8 +35,6 @@ All endpoints are very simple and returns strings.
     - response:
         - 200, {'content': '<some content>'}
         - 404, {'status': 'no-content-for-this-bs-type'}
-        - 550, {'status': 'cannot connect to databases'}
-        - 551, {'status': 'cannot connect to backend services'}
 
 ### image-processor
 
