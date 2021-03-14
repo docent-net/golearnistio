@@ -27,6 +27,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"fmt"
 )
 
 type HttpResp struct {
@@ -45,6 +46,7 @@ func main() {
 	http.HandleFunc("/", status_handler)
 	http.HandleFunc("/status", status_handler)
 	http.HandleFunc("/test-services-conns", test_services_conns_handler)
+	http.HandleFunc("/verify-session-token", verify_token_handler)
 	http.HandleFunc("/authorize", authorize_handler)
 	log.Fatal(http.ListenAndServe("0.0.0.0:8002", nil))
 }
@@ -80,7 +82,43 @@ func validate_user_credentials(username string, password string) bool {
 	// todo: when DB is ready, add real verification of credentials
 	// for now let's just pretend we do something
 	time.Sleep(150 * time.Millisecond)
-	return true
+
+	if username == "user" && password == "user" {
+		return true
+	}
+
+	return false
+}
+
+func verify_session_token(token string) bool {
+	// let's simply assume, that a session token that ends with "5" is a legit
+	// token
+	if token[len(token)-1:] == "5" {
+		return true
+	}
+
+	return false
+}
+
+func verify_token_handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	if r.Method == "GET" {
+		token := r.URL.Query().Get("token");
+		if token == "" {
+			error_403_handler()
+		} else {
+			if verify_session_token(token) {
+				w.WriteHeader(http.StatusOK)
+				w.Write([]byte(
+					fmt.Sprintf("{\"status\": \"authorized\"}"),
+				))
+			} else {
+				error_404_handler(w)
+			}
+		}
+	} else {
+		error_404_handler(w)
+	}
 }
 
 func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
