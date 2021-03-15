@@ -56,6 +56,7 @@ func authorize_handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		if err := r.ParseForm(); err != nil {
 			error_403_handler(w)
+			return
 		}
 
 		username := r.FormValue("username")
@@ -63,6 +64,7 @@ func authorize_handler(w http.ResponseWriter, r *http.Request) {
 
 		if username == "" || password == "" {
 			error_403_handler(w)
+			return
 		} else {
 			if validate_user_credentials(username, password) {
 				w.WriteHeader(http.StatusOK)
@@ -71,10 +73,12 @@ func authorize_handler(w http.ResponseWriter, r *http.Request) {
 				json.NewEncoder(w).Encode(status)
 			} else {
 				error_403_handler(w)
+				return
 			}
 		}
 	} else {
 		error_404_handler(w)
+		return
 	}
 }
 
@@ -105,7 +109,8 @@ func verify_token_handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		token := r.URL.Query().Get("token");
 		if token == "" {
-			error_403_handler()
+			error_403_handler(w)
+			return
 		} else {
 			if verify_session_token(token) {
 				w.WriteHeader(http.StatusOK)
@@ -113,11 +118,13 @@ func verify_token_handler(w http.ResponseWriter, r *http.Request) {
 					fmt.Sprintf("{\"status\": \"authorized\"}"),
 				))
 			} else {
-				error_404_handler(w)
+				error_403_handler(w)
+				return
 			}
 		}
 	} else {
-		error_404_handler(w)
+		error_403_handler(w)
+		return
 	}
 }
 
@@ -150,6 +157,7 @@ func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		error_404_handler(w)
+		return
 	}
 }
 
@@ -190,6 +198,7 @@ func status_handler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(status)
 	} else {
 		error_404_handler(w)
+		return
 	}
 }
 

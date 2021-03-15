@@ -23,8 +23,11 @@ from flask_api import FlaskAPI, status, exceptions
 import requests
 import os
 from time import sleep
+from functools import wraps
+from flask_httpauth import HTTPTokenAuth
 
 app = FlaskAPI(__name__)
+auth = HTTPTokenAuth()
 
 @app.route("/", methods=['GET'])
 @app.route("/status", methods=['GET'])
@@ -35,7 +38,36 @@ def status_handler():
 
     return {'status': 'OK'}, status.HTTP_200_OK
 
+@auth.verify_token
+def verify_token(token):
+    tokens = {
+        "aaaa1": "test-user"
+    }
+    if token in tokens:
+        return tokens[token]
+
+# def verify_session_token(f):
+#    @wraps(f)
+#    def decorator(*args, **kwargs):
+#       token = None
+
+#       if 'x-access-tokens' in request.headers:
+#          token = request.headers['x-access-tokens']
+
+#       if not token:
+#          return jsonify({'message': 'a valid token is missing'})
+
+#       try:
+#          data = jwt.decode(token, app.config[SECRET_KEY])
+#          current_user = Users.query.filter_by(public_id=data['public_id']).first()
+#       except:
+#          return jsonify({'message': 'token is invalid'})
+
+#         return f(current_user, *args, **kwargs)
+#    return decorator
+
 @app.route("/delete-image", methods=['DELETE'])
+@auth.login_required
 def delete_image_handler():
     """
     Replace image dummy endpoint
