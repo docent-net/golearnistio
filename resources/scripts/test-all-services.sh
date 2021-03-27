@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: rewrite this shit to python
+
 ###################################################
 #
 # This script iterates over all services endpoints
@@ -29,11 +31,13 @@ function test_endpoint () {
     HTTP_METHOD=$2
     SCRIPT_PATH=$3
     FORM_DATA=$4
+    EXPECTED_STATUS_CODE=$5
+
     echo "-> [$HTTP_METHOD] $HTTP_URL/$SCRIPT_PATH"
 
     TEST=$($CURL_CMD -X $HTTP_METHOD $FORM_DATA \
         $HTTP_URL/$SCRIPT_PATH)
-    if [[ $TEST != 200 ]]; then
+    if [[ "$TEST" != "$EXPECTED_STATUS_CODE" ]]; then
         RETCODE=1
         echo "${ISTIO_SVC_image_processor}/${SCRIPT_PATH} : $TEST"
     fi
@@ -88,3 +92,5 @@ test_endpoint ${SVCS_URLS[auth_service]} "GET" "test-services-conns"
 test_endpoint ${SVCS_URLS[auth_service]} "POST" "authorize" \
     '-H "Content-Type: application/x-www-form-urlencoded" \
     -d username=test_user&password=complexpassword'
+
+exit $RETCODE
