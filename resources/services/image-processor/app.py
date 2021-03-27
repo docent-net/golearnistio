@@ -18,13 +18,12 @@
 #   A dummy service pretending to process uploaded images)
 #
 ##########################################################################
-from flask import request, url_for
-from flask_api import FlaskAPI, status, exceptions
+from flask import request
+from flask_api import FlaskAPI, status
+from flask_httpauth import HTTPTokenAuth
 import requests
 import os
 from time import sleep
-from functools import wraps
-from flask_httpauth import HTTPTokenAuth
 
 app = FlaskAPI(__name__)
 auth = HTTPTokenAuth()
@@ -40,31 +39,24 @@ def status_handler():
 
 @auth.verify_token
 def verify_token(token):
-    tokens = {
-        "aaaa1": "test-user"
-    }
-    if token in tokens:
-        return tokens[token]
+    AUTH_SERVICE_URL=os.environ['ISTIO_SVC_auth_service']
 
-# def verify_session_token(f):
-#    @wraps(f)
-#    def decorator(*args, **kwargs):
-#       token = None
+    try:
+        req = requests.request(
+            'GET',
+            f'{AUTH_SERVICE_URL}/verify-session-token?token={token}',
+            timeout=1
+            )
+    except (requests.exceptions.Timeout,
+            requests.exceptions.ConnectionError) as e:
+        return False
+    except Exception:
+        return False
 
-#       if 'x-access-tokens' in request.headers:
-#          token = request.headers['x-access-tokens']
+    if req.status_code != 200 or req.json()['status'] != 'authorized':
+        return False
 
-#       if not token:
-#          return jsonify({'message': 'a valid token is missing'})
-
-#       try:
-#          data = jwt.decode(token, app.config[SECRET_KEY])
-#          current_user = Users.query.filter_by(public_id=data['public_id']).first()
-#       except:
-#          return jsonify({'message': 'token is invalid'})
-
-#         return f(current_user, *args, **kwargs)
-#    return decorator
+    return req.json()['status']
 
 @app.route("/delete-image", methods=['DELETE'])
 @auth.login_required
@@ -87,6 +79,7 @@ def delete_image_handler():
     return {'status': 'image-deleted'}, status.HTTP_200_OK
 
 @app.route("/replace-image", methods=['PUT'])
+@auth.login_required
 def replace_image_handler():
     """
     Replace image dummy endpoint
@@ -112,6 +105,7 @@ def replace_image_handler():
     return {'status': 'image-replaced'}, status.HTTP_200_OK
 
 @app.route("/save-image", methods=['POST'])
+@auth.login_required
 def save_image_handler():
     """
     Save image dummy endpoint

@@ -86,8 +86,9 @@ func validate_user_credentials(username string, password string) bool {
 	// todo: when DB is ready, add real verification of credentials
 	// for now let's just pretend we do something
 	time.Sleep(150 * time.Millisecond)
+	return true
 
-	if username == "user" && password == "user" {
+	if username == "test_user" && password == "complexpassword" {
 		return true
 	}
 
