@@ -55,7 +55,7 @@ func authorize_handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	if r.Method == "POST" {
 		if err := r.ParseForm(); err != nil {
-			error_403_handler(w)
+			error_401_handler(w)
 			return
 		}
 
@@ -63,7 +63,7 @@ func authorize_handler(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 
 		if username == "" || password == "" {
-			error_403_handler(w)
+			error_401_handler(w)
 			return
 		} else {
 			if validate_user_credentials(username, password) {
@@ -72,7 +72,7 @@ func authorize_handler(w http.ResponseWriter, r *http.Request) {
 				status := StatusStruct{Status: "OK"}
 				json.NewEncoder(w).Encode(status)
 			} else {
-				error_403_handler(w)
+				error_401_handler(w)
 				return
 			}
 		}
@@ -86,7 +86,6 @@ func validate_user_credentials(username string, password string) bool {
 	// todo: when DB is ready, add real verification of credentials
 	// for now let's just pretend we do something
 	time.Sleep(150 * time.Millisecond)
-	return true
 
 	if username == "test_user" && password == "complexpassword" {
 		return true
@@ -102,6 +101,8 @@ func verify_session_token(token string) bool {
 		return true
 	}
 
+	print("Session token incorrect:", token)
+
 	return false
 }
 
@@ -110,7 +111,7 @@ func verify_token_handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		token := r.URL.Query().Get("token");
 		if token == "" {
-			error_403_handler(w)
+			error_401_handler(w)
 			return
 		} else {
 			if verify_session_token(token) {
@@ -119,12 +120,12 @@ func verify_token_handler(w http.ResponseWriter, r *http.Request) {
 					fmt.Sprintf("{\"status\": \"authorized\"}"),
 				))
 			} else {
-				error_403_handler(w)
+				error_401_handler(w)
 				return
 			}
 		}
 	} else {
-		error_403_handler(w)
+		error_401_handler(w)
 		return
 	}
 }
@@ -208,7 +209,7 @@ func error_404_handler(w http.ResponseWriter) {
 	w.Write([]byte(`{"status": "404 not found"}`))
 }
 
-func error_403_handler(w http.ResponseWriter) {
+func error_401_handler(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusUnauthorized)
 	w.Write([]byte(`{"status": "unauthorized"}`))
 }

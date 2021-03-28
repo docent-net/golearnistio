@@ -92,7 +92,9 @@ def replace_image_handler():
     if not img_name or not img_size or not img_id:
         return {'status': 'image-not-replaced'}, 570
 
-    better_img_name = generate_better_img_name(img_name)
+    better_img_name = generate_better_img_name(
+        img_name, token=request.headers["Authorization"]
+    )
     if not better_img_name:
         return {'status': 'cannot connect to backend services'}, 551
 
@@ -117,7 +119,9 @@ def save_image_handler():
     if not img_name or not img_size:
         return {'status': 'image-not-saved'}, 570
 
-    better_img_name = generate_better_img_name(img_name)
+    better_img_name = generate_better_img_name(
+        img_name, token=request.headers["Authorization"]
+    )
     if not better_img_name:
         return {'status': 'cannot connect to backend services'}, 551
 
@@ -134,7 +138,7 @@ def save_image_handler():
         'status': f'image-saved:{better_img_name}'
         }, status.HTTP_200_OK
 
-def generate_better_img_name(img_name):
+def generate_better_img_name(img_name, token):
     """
     Fetch improved image name from content generator
     """
@@ -142,9 +146,11 @@ def generate_better_img_name(img_name):
     CONTENT_GENERATOR_URL=os.environ['ISTIO_SVC_content_generator']
 
     try:
+        headers = {"Authorization": f"{token}"}
         req = requests.request(
             'GET',
             f'{CONTENT_GENERATOR_URL}/generate-bs?bs-type=1',
+            headers=headers,
             timeout=1
             )
     except (requests.exceptions.Timeout,

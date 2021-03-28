@@ -54,7 +54,7 @@ func main() {
 func bs_generator_handler(w http.ResponseWriter, r *http.Request) {
 	// this is a secured endpoint, let's verify session token
 	if !verify_request_token(r) {
-		error_403_handler(w)
+		error_401_handler(w)
 		return
 	}
 
@@ -93,14 +93,8 @@ func verify_request_token(r *http.Request) bool {
 		return false
 	}
 
-	splitToken := strings.Split(reqToken, "Bearer ")
+	splitToken := strings.Split(reqToken, " ")
 	if len(splitToken) < 2 {
-		return false
-	}
-
-	reqToken = splitToken[1]
-
-	if len(reqToken) != 32 {
 		return false
 	}
 
@@ -108,8 +102,7 @@ func verify_request_token(r *http.Request) bool {
 		Timeout: 1 * time.Second,
 	}
 
-	authServiceURL := os.Getenv("ISTIO_SVC_auth_service")+"/verify-session-token?token="+reqToken
-	print(authServiceURL)
+	authServiceURL := os.Getenv("ISTIO_SVC_auth_service")+"/verify-session-token?token="+splitToken[1]
 	req, err := client.Get(authServiceURL)
 	if err != nil {
 		return false
@@ -204,18 +197,17 @@ func status_handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func error_404_handler(w http.ResponseWriter, desc ...string) {
-	if len(desc) == 0 {
-		desc[0] = "404 not found"
-	} else {
-		desc[0] = strings.Join(desc, "")
+func error_404_handler(w http.ResponseWriter, desc_sl ...string) {
+	desc := "404 not found"
+	if len(desc_sl) > 0 {
+		desc = strings.Join(desc_sl, "")
 	}
 	msg := fmt.Sprintf("{\"status\": \"%s\"}", desc)
 	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte(msg))
 }
 
-func error_403_handler(w http.ResponseWriter) {
+func error_401_handler(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusUnauthorized)
 	w.Write([]byte(`{"status": "unauthorized"}`))
 }
