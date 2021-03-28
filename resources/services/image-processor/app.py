@@ -18,13 +18,15 @@
 #   A dummy service pretending to process uploaded images)
 #
 ##########################################################################
-from flask import request, url_for
-from flask_api import FlaskAPI, status, exceptions
+from flask import request
+from flask_api import FlaskAPI, status
+from flask_httpauth import HTTPTokenAuth
 import requests
 import os
 from time import sleep
 
 app = FlaskAPI(__name__)
+auth = HTTPTokenAuth()
 
 @app.route("/", methods=['GET'])
 @app.route("/status", methods=['GET'])
@@ -35,7 +37,29 @@ def status_handler():
 
     return {'status': 'OK'}, status.HTTP_200_OK
 
+@auth.verify_token
+def verify_token(token):
+    AUTH_SERVICE_URL=os.environ['ISTIO_SVC_auth_service']
+
+    try:
+        req = requests.request(
+            'GET',
+            f'{AUTH_SERVICE_URL}/verify-session-token?token={token}',
+            timeout=1
+            )
+    except (requests.exceptions.Timeout,
+            requests.exceptions.ConnectionError) as e:
+        return False
+    except Exception:
+        return False
+
+    if req.status_code != 200 or req.json()['status'] != 'authorized':
+        return False
+
+    return req.json()['status']
+
 @app.route("/delete-image", methods=['DELETE'])
+@auth.login_required
 def delete_image_handler():
     """
     Replace image dummy endpoint
@@ -55,6 +79,7 @@ def delete_image_handler():
     return {'status': 'image-deleted'}, status.HTTP_200_OK
 
 @app.route("/replace-image", methods=['PUT'])
+@auth.login_required
 def replace_image_handler():
     """
     Replace image dummy endpoint
@@ -67,7 +92,9 @@ def replace_image_handler():
     if not img_name or not img_size or not img_id:
         return {'status': 'image-not-replaced'}, 570
 
-    better_img_name = generate_better_img_name(img_name)
+    better_img_name = generate_better_img_name(
+        img_name, token=request.headers["Authorization"]
+    )
     if not better_img_name:
         return {'status': 'cannot connect to backend services'}, 551
 
@@ -80,6 +107,7 @@ def replace_image_handler():
     return {'status': 'image-replaced'}, status.HTTP_200_OK
 
 @app.route("/save-image", methods=['POST'])
+@auth.login_required
 def save_image_handler():
     """
     Save image dummy endpoint
@@ -91,7 +119,9 @@ def save_image_handler():
     if not img_name or not img_size:
         return {'status': 'image-not-saved'}, 570
 
-    better_img_name = generate_better_img_name(img_name)
+    better_img_name = generate_better_img_name(
+        img_name, token=request.headers["Authorization"]
+    )
     if not better_img_name:
         return {'status': 'cannot connect to backend services'}, 551
 
@@ -108,7 +138,7 @@ def save_image_handler():
         'status': f'image-saved:{better_img_name}'
         }, status.HTTP_200_OK
 
-def generate_better_img_name(img_name):
+def generate_better_img_name(img_name, token):
     """
     Fetch improved image name from content generator
     """
@@ -116,9 +146,11 @@ def generate_better_img_name(img_name):
     CONTENT_GENERATOR_URL=os.environ['ISTIO_SVC_content_generator']
 
     try:
+        headers = {"Authorization": f"{token}"}
         req = requests.request(
             'GET',
             f'{CONTENT_GENERATOR_URL}/generate-bs?bs-type=1',
+            headers=headers,
             timeout=1
             )
     except (requests.exceptions.Timeout,

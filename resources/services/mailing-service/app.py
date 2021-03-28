@@ -18,13 +18,15 @@
 #   A dummy service pretending to manage sending emails
 #
 ##########################################################################
-from flask import request, url_for
-from flask_api import FlaskAPI, status, exceptions
+from flask import request
+from flask_api import FlaskAPI, status
+from flask_httpauth import HTTPTokenAuth
 import requests
 import os
 from time import sleep
 
 app = FlaskAPI(__name__)
+auth = HTTPTokenAuth()
 
 @app.route("/", methods=['GET'])
 @app.route("/status", methods=['GET'])
@@ -35,7 +37,30 @@ def status_handler():
 
     return {'status': 'OK'}, status.HTTP_200_OK
 
+@auth.verify_token
+def verify_token(token):
+    AUTH_SERVICE_URL=os.environ['ISTIO_SVC_auth_service']
+
+    try:
+        req = requests.request(
+            'GET',
+            f'{AUTH_SERVICE_URL}/verify-session-token?token={token}',
+            timeout=1
+            )
+    except (requests.exceptions.Timeout,
+            requests.exceptions.ConnectionError) as e:
+        return False
+    except Exception:
+        return False
+
+    if req.status_code != 200 or req.json()['status'] != 'authorized':
+        return False
+
+    return req.json()['status']
+
+
 @app.route("/send-message", methods=['POST'])
+@auth.login_required
 def send_message_handler():
     """
     Send message dummy endpoint

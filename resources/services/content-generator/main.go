@@ -52,29 +52,77 @@ func main() {
 }
 
 func bs_generator_handler(w http.ResponseWriter, r *http.Request) {
+	// this is a secured endpoint, let's verify session token
+	if !verify_request_token(r) {
+		log.Println("Unauthorized request")
+		error_401_handler(w)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	if r.Method == "GET" {
-		bs_type := r.URL.Query().Get("bs-type")
-		if bs_type == "" {
-			error_404_handler(w, "no-content-for-this-bs-type")
-		} else {
-			bs_content := generate_bs_content(bs_type)
+		switch bs_type := r.URL.Query().Get("bs-type"); bs_type {
+		case "1":
+			bs_content := generate_bs_content_1()
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte(
 				fmt.Sprintf("{\"content\": \"%s\"}", bs_content),
 			))
+		default:
+			log.Printf("404: wrong bs-type: %s", bs_type)
+			error_404_handler(w, "no-content-for-this-bs-type")
+			return
 		}
-
 	} else {
-		error_404_handler(w)
+		error_405_handler(w)
+		return
 	}
 }
 
-func generate_bs_content(bs_type string) string {
+func generate_bs_content_1() string {
 	// TODO: connecting to DBs, cache, queue
 	// for now let's just pretend we do something
 	time.Sleep(150 * time.Millisecond)
 	return "some content"
+}
+
+func verify_request_token(r *http.Request) bool {
+	// send sync request to auth-service and verify session token sent
+	// in Authorization: Bearer token
+
+	reqToken := r.Header.Get("Authorization")
+	if reqToken == "" {
+		return false
+	}
+
+	splitToken := strings.Split(reqToken, " ")
+	if len(splitToken) < 2 {
+		return false
+	}
+
+	client := http.Client{
+		Timeout: 1 * time.Second,
+	}
+
+	authServiceURL := os.Getenv("ISTIO_SVC_auth_service")+"/verify-session-token?token="+splitToken[1]
+	req, err := client.Get(authServiceURL)
+	if err != nil {
+		return false
+	}
+
+	if req.StatusCode == http.StatusOK {
+		defer req.Body.Close()
+
+		var req_status = new(HttpResp)
+		err := json.NewDecoder(req.Body).Decode(req_status)
+		if err != nil {
+			return false
+		}
+		if strings.ToUpper(req_status.Status) == "AUTHORIZED" {
+			return true
+		}
+	}
+	return false
 }
 
 func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +153,8 @@ func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(connstatus)
 		}
 	} else {
-		error_404_handler(w)
+		error_405_handler(w)
+		return
 	}
 }
 
@@ -145,17 +194,27 @@ func status_handler(w http.ResponseWriter, r *http.Request) {
 		status := StatusStruct{Status: "OK"}
 		json.NewEncoder(w).Encode(status)
 	} else {
-		error_404_handler(w)
+		error_405_handler(w)
+		return
 	}
 }
 
-func error_404_handler(w http.ResponseWriter, desc ...string) {
-	if len(desc) == 0 {
-		desc[0] = "404 not found"
-	} else {
-		desc[0] = strings.Join(desc, "")
+func error_404_handler(w http.ResponseWriter, desc_sl ...string) {
+	desc := "404 not found"
+	if len(desc_sl) > 0 {
+		desc = strings.Join(desc_sl, "")
 	}
 	msg := fmt.Sprintf("{\"status\": \"%s\"}", desc)
 	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte(msg))
+}
+
+func error_401_handler(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusUnauthorized)
+	w.Write([]byte(`{"status": "unauthorized"}`))
+}
+
+func error_405_handler(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusMethodNotAllowed)
+	w.Write([]byte(`{"status": "method-not-allowed"}`))
 }

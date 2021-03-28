@@ -9,12 +9,18 @@ All endpoints are very simple and returns strings.
         - 200, {'status': 'OK'}
 - /test-services-conns [GET]:
     - response:
-        - 200, {'status': 'OK'}
+        - 200, {'status': 'OK', 'session-token': '<some-md5-string:32>'}
         - 500, {'connfail': 'list,of,not,responding,services'}
 - /authorize [POST]:
     - properties:
         - username [string]
         - password [string]
+    - response:
+        - 200, {'status': 'authorized'}
+        - 403, {'status': 'unauthorized'}
+- /verify-session-token [GET]:
+    - properties:
+        - token [string]
     - response:
         - 200, {'status': 'authorized'}
         - 403, {'status': 'unauthorized'}
@@ -28,15 +34,13 @@ All endpoints are very simple and returns strings.
     - response:
         - 200, {'status': 'OK'}
         - 500, {'connfail': 'list,of,not,responding,services'}
-- /generate-bs [GET]:
+- [auth required]: /generate-bs [GET]:
     - properties:
         - bs-type [int]
             - 1: img_name beautifier
     - response:
         - 200, {'content': '<some content>'}
         - 404, {'status': 'no-content-for-this-bs-type'}
-        - 550, {'status': 'cannot connect to databases'}
-        - 551, {'status': 'cannot connect to backend services'}
 
 ### image-processor
 
@@ -47,7 +51,7 @@ All endpoints are very simple and returns strings.
     - response:
         - 200, {'status': 'OK'}
         - 500, {'connfail': 'list,of,not,responding,services'}
-- /save-image [POST]:
+- [auth required]: /save-image [POST]:
     - properties:
         - image-name [string]
         - image-size [int]
@@ -56,7 +60,7 @@ All endpoints are very simple and returns strings.
         - 570, {'status': 'image-not-saved'}
         - 550, {'status': 'cannot connect to queue'}
         - 551, {'status': 'cannot connect to backend services'}
-- /replace-image [PUT]:
+- [auth required]: /replace-image [PUT]:
     - properties:
         - image-name [string]
         - image-size [int]
@@ -64,7 +68,7 @@ All endpoints are very simple and returns strings.
     - response:
         - 200, {'status': 'image-replaced'}
         - 570, {'status': 'image-not-replaced'}
-- /delete-image [DELETE]:
+- [auth required]: /delete-image [DELETE]:
     - properties:
         - image-id [string]
     - response:
@@ -81,7 +85,7 @@ All endpoints are very simple and returns strings.
     - response:
         - 200, {'status': 'OK'}
         - 500, {'connfail': 'list,of,not,responding,services'}- /send-message [POST]:
-- /send-message [POST]:
+- [auth required]: /send-message [POST]:
     - properties:
         - msg-author [string]
         - msg-body [string]
