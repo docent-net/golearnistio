@@ -1,0 +1,42 @@
+version: "3"
+services:
+  auth_service:
+    build: ./auth-service
+    # image: localhost/services_auth_service
+    ports:
+      - "8002:8002"
+    environment:
+      ISTIO_SVC_image_processor: "http://127.0.0.1:8001"
+      ISTIO_SVC_auth_service: "http://127.0.0.1:8002"
+      ISTIO_SVC_content_generator: "http://127.0.0.1:8003"
+      ISTIO_SVC_mailing_service: "http://127.0.0.1:8004"
+  content_generator:
+    build: ./content-generator
+    # image: localhost/services_content_generator
+    ports:
+      - "8003:8003"
+    environment:
+      ISTIO_SVC_image_processor: "http://127.0.0.1:8001"
+      ISTIO_SVC_auth_service: "http://127.0.0.1:8002"
+      ISTIO_SVC_content_generator: "http://127.0.0.1:8003"
+      ISTIO_SVC_mailing_service: "http://127.0.0.1:8004"
+  image_processor:
+    build: ./image-processor
+    # image: localhost/services_image_processor
+    ports:
+      - "8001:8001"
+    environment:
+      ISTIO_SVC_image_processor: "http://127.0.0.1:8001"
+      ISTIO_SVC_auth_service: "http://127.0.0.1:8002"
+      ISTIO_SVC_content_generator: "http://127.0.0.1:8003"
+      ISTIO_SVC_mailing_service: "http://127.0.0.1:8004"
+  mailing_service:
+    build: ./mailing-service
+    # image: localhost/services_mailing_service
+    ports:
+      - "8004:8004"
+    environment:
+      ISTIO_SVC_image_processor: "http://127.0.0.1:8001"
+      ISTIO_SVC_auth_service: "http://127.0.0.1:8002"
+      ISTIO_SVC_content_generator: "http://127.0.0.1:8003"
+      ISTIO_SVC_mailing_service: "http://127.0.0.1:8004"

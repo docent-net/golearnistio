@@ -63,21 +63,25 @@ func authorize_handler(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 
 		if username == "" || password == "" {
+			log.Printf("Wrong credentials - user: %s pwd: %s", username, password)
 			error_401_handler(w)
 			return
 		} else {
 			if validate_user_credentials(username, password) {
+				log.Printf("User authenticated: %s / %s", username, password)
 				w.WriteHeader(http.StatusOK)
 
 				status := StatusStruct{Status: "OK"}
 				json.NewEncoder(w).Encode(status)
 			} else {
+				log.Printf("Wrong credentials - user: %s pwd: %s", username, password)
 				error_401_handler(w)
 				return
 			}
 		}
 	} else {
-		error_404_handler(w)
+		log.Printf("Wrong credentials - user: %s pwd: %s")
+		error_405_handler(w)
 		return
 	}
 }
@@ -101,7 +105,7 @@ func verify_session_token(token string) bool {
 		return true
 	}
 
-	print("Session token incorrect:", token)
+	log.Printf("Session token incorrect: %s", token)
 
 	return false
 }
@@ -158,7 +162,7 @@ func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(connstatus)
 		}
 	} else {
-		error_404_handler(w)
+		error_405_handler(w)
 		return
 	}
 }
@@ -199,17 +203,18 @@ func status_handler(w http.ResponseWriter, r *http.Request) {
 		status := StatusStruct{Status: "OK"}
 		json.NewEncoder(w).Encode(status)
 	} else {
-		error_404_handler(w)
+		error_405_handler(w)
 		return
 	}
 }
 
-func error_404_handler(w http.ResponseWriter) {
-	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte(`{"status": "404 not found"}`))
-}
 
 func error_401_handler(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusUnauthorized)
 	w.Write([]byte(`{"status": "unauthorized"}`))
+}
+
+func error_405_handler(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusMethodNotAllowed)
+	w.Write([]byte(`{"status": "method-not-allowed"}`))
 }

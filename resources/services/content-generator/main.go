@@ -54,6 +54,7 @@ func main() {
 func bs_generator_handler(w http.ResponseWriter, r *http.Request) {
 	// this is a secured endpoint, let's verify session token
 	if !verify_request_token(r) {
+		log.Println("Unauthorized request")
 		error_401_handler(w)
 		return
 	}
@@ -68,11 +69,12 @@ func bs_generator_handler(w http.ResponseWriter, r *http.Request) {
 				fmt.Sprintf("{\"content\": \"%s\"}", bs_content),
 			))
 		default:
+			log.Printf("404: wrong bs-type: %s", bs_type)
 			error_404_handler(w, "no-content-for-this-bs-type")
 			return
 		}
 	} else {
-		error_404_handler(w)
+		error_405_handler(w)
 		return
 	}
 }
@@ -151,7 +153,7 @@ func test_services_conns_handler(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(connstatus)
 		}
 	} else {
-		error_404_handler(w)
+		error_405_handler(w)
 		return
 	}
 }
@@ -192,7 +194,7 @@ func status_handler(w http.ResponseWriter, r *http.Request) {
 		status := StatusStruct{Status: "OK"}
 		json.NewEncoder(w).Encode(status)
 	} else {
-		error_404_handler(w)
+		error_405_handler(w)
 		return
 	}
 }
@@ -210,4 +212,9 @@ func error_404_handler(w http.ResponseWriter, desc_sl ...string) {
 func error_401_handler(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusUnauthorized)
 	w.Write([]byte(`{"status": "unauthorized"}`))
+}
+
+func error_405_handler(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusMethodNotAllowed)
+	w.Write([]byte(`{"status": "method-not-allowed"}`))
 }
