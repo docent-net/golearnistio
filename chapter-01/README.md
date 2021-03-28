@@ -120,4 +120,4 @@ nothing for now
 
 **Recording**:
 
-TBD
+[![YouTube stream](https://raw.githubusercontent.com/docent-net/golearnistio/main/chapter-01/yt-screenshot.png)](https://www.youtube.com/watch?v=xqcbTFFwRxk&list=PLe_xxswxhVz_XSGfhJq_oYtUgOgWoQu6Y&index=1&ab_channel=MaciejLasyk)
